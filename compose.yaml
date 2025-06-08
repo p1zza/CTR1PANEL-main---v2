@@ -4,7 +4,9 @@ services:
     container_name: postgres
     restart: always
     environment:
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: CTR1PANEL
     expose:
     - "5432"
     ports:
@@ -14,7 +16,7 @@ services:
       - ./db:/var/lib/postgresql/data
 
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d CTR1PANEL"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -27,6 +29,14 @@ services:
       - 11000:11000
     links:
       - "db:database"
+    
+    environment:
+      DB_HOST: db 
+      DB_PORT: 5432
+      DB_NAME: CTR1PANEL
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+
     depends_on:
       "db":
         condition: service_healthy
