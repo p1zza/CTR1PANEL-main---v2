@@ -428,7 +428,7 @@ class UserLogin():
                 break
             return out[0]
         else:
-            return NULL
+            return None
 
 
 
@@ -451,5 +451,10 @@ def decodeJWT(token):
     return data
 
 if __name__ == '__main__':
-    models.createDB()
+    try:
+        models.createDB()
+    except Exception as e:
+        print("Ошибка при инициализации базы данных:")
+        print(e)
+        exit(1)
     app.run(debug=False, port = 11000, host='0.0.0.0')
