@@ -457,4 +457,4 @@ if __name__ == '__main__':
         print("Ошибка при инициализации базы данных:")
         print(e)
         exit(1)
-    app.run(debug=False, port = 11000, host='0.0.0.0')
+    app.run(debug=True, port = 11000, host='0.0.0.0')

@@ -16,7 +16,6 @@ def connect_to_db():
             port="5432"
         )
         conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
-        conn.close()
         return conn
         
     except psycopg2.Error as e:
@@ -74,6 +73,7 @@ def connect_to_mainbase():
             #host = "0.0.0.0",
             port="5432"
         )
+        print("Подключение к ctr1panel успешно")
         return conn
     except psycopg2.Error as e:
         print("Ошибка подключения к ctr1panel")
@@ -83,27 +83,13 @@ def connect_to_mainbase():
 def createDB():
     try:
         conn = connect_to_db()
-        # Создаем базу данных если не существует
         with conn.cursor() as cur:
             cur.execute("SELECT 1 FROM pg_database WHERE datname='ctr1panel'")
             if not cur.fetchone():
                 cur.execute("CREATE DATABASE ctr1panel;")
                 print("База данных ctr1panel создана")
-                cur.close()
         
-        # Закрываем соединение с postgres
-        conn.close()
-        
-        # Подключаемся к новой БД
-        conn = psycopg2.connect(
-            dbname="ctr1panel",
-            user="postgres",
-            password="postgres",
-            host="db",
-            #host = "0.0.0.0",
-            port="5432"
-        )
-
+        print("Подключение к postgres успешно")
         conn.autocommit = True
         cur = conn.cursor()
         cur.execute("CREATE DATABASE CTR1PANEL;")
@@ -112,10 +98,19 @@ def createDB():
         conn.commit()
         conn.close()
         print("Создана БД CTR1PANEL, добавлен пользователь Username")
+
+        conn = psycopg2.connect(
+        dbname="ctr1panel",
+        user="postgres",
+        password="postgres",
+        host="db",
+        #host = "0.0.0.0",
+        port="5432")
+        conn.commit()
+        conn.close()
         
     except psycopg2.Error as e:
         print("БД CTR1Panel с пользователем username не была создана")
-        print("Error: Unable to connect to the database")
         print(e)
     
     try:
@@ -153,32 +148,32 @@ def getUsers():
 def getUser(username):
     conn = connect_to_mainbase()
     with conn.cursor() as cur:
-            cur.execute('SELECT * FROM "Users" WHERE username = \'%s\';' %username)
-            return cur.fetchall()
+        cur.execute('SELECT * FROM "Users" WHERE username = \'%s\';' %username)
+        return cur.fetchall()
 
 def getUserID(username):
     conn = connect_to_mainbase()
     with conn.cursor() as cur:
-            cur.execute('SELECT user_id FROM "Users" WHERE username = \'%s\';' %username)
-            return cur.fetchall()
+        cur.execute('SELECT user_id FROM "Users" WHERE username = \'%s\';' %username)
+        return cur.fetchall()
 
 def insertUser(name,password):
     conn = connect_to_mainbase()
     with conn.cursor() as cur:
-            cur.execute('INSERT INTO "Users" (username,password,is_captain) VALUES (\'%s\',\'%s\',0);' %(name,password))
-            conn.commit()
+        cur.execute('INSERT INTO "Users" (username,password,is_captain) VALUES (\'%s\',\'%s\',0);' %(name,password))
+        conn.commit()
 
 def selectUserComment(username):
     conn = connect_to_mainbase()
     with conn.cursor() as cur:
-            cur.execute('SELECT comment FROM "Users" WHERE username = %s;' %username)
-            return cur.fetchall()
+        cur.execute('SELECT comment FROM "Users" WHERE username = %s;' %username)
+        return cur.fetchall()
 
 def updateUserComment(username,comment):
     conn = connect_to_mainbase()
     with conn.cursor() as cur:
-            cur.execute('UPDATE "Users" SET comment = \'%s\' WHERE username = \'%s\';' %(comment,username))
-            conn.commit()
+        cur.execute('UPDATE "Users" SET comment = \'%s\' WHERE username = \'%s\';' %(comment,username))
+        conn.commit()
     
 
 #HeadVagon
@@ -186,17 +181,17 @@ def getWorkersAmount(vagon):
     out = ""
     conn = connect_to_mainbase()
     with conn.cursor() as cur:
-            cur.execute('SELECT workers FROM "Vagon" WHERE vagontype = %s;' % vagon)
-            out = cur.fetchall()
-            a = out[0]
-            return a[0]
+        cur.execute('SELECT workers FROM "Vagon" WHERE vagontype = %s;' % vagon)
+        out = cur.fetchall()
+        a = out[0]
+        return a[0]
 
 def updateWorkersAmount(workers,vagonType):
     out = 'UPDATE "Vagon" SET workers = %s WHERE vagontype = %s;' %(workers,vagonType)
     conn = connect_to_mainbase()
     with conn.cursor() as cur:
-            cur.execute(out)
-            conn.commit()
+        cur.execute(out)
+        conn.commit()
 
 #VagonStatus
 def getVagonStatus(vagon):
@@ -204,8 +199,8 @@ def getVagonStatus(vagon):
     out = ""
     conn = connect_to_mainbase()
     with conn.cursor() as cur:
-            cur.execute(str_)
-            out = cur.fetchall()
+        cur.execute(str_)
+        out = cur.fetchall()
     if out[0] == (True,):
         return "Чисто"
     else:
