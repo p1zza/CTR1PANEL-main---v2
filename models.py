@@ -350,12 +350,17 @@ def getCargoPass(cargoType):
 
 def updateCargoPass(cargoName,cargoPass):
     out = 'UPDATE "Cargo" SET pass =%s WHERE cargotype = %s;' %(cargoPass,cargoName)
+    print(out)
     conn = connect_to_mainbase()
-    with conn.cursor() as cur:
-        cur.execute(out)
-        conn.commit()
-        out = cur.fetchall()
-        return out
+    try:
+        with conn.cursor() as cur:
+            cur.execute(out)
+            conn.commit()
+            out = cur.fetchall()
+            return out
+    except psycopg2.Error as e:
+        print(e) 
+        return ""
 
 def renewCargo():
     conn = connect_to_mainbase()

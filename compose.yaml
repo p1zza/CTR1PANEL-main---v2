@@ -26,7 +26,7 @@ services:
     build:
       context: .
     ports:
-      - 11000:11000
+      - 112:11000
     expose:
       - 11000
     links:

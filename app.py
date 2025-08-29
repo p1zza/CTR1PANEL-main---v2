@@ -283,6 +283,7 @@ def cargo():
             else:
                 passw = request.form['cargoChangePass']
                 selectedName = request.form.get('cargoSelect')
+                selectedName = f'{selectedName}'
                 out = models.updateCargoPass(selectedName,passw)
                 flash(out)
                 logger.info("%s Введен новый пароль: %s для груза: %s" %(request.remote_addr,passw,selectedName))
