@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Initial Start service"
-cd /home/uctf/services/CTR1PANEL
+cd /home/admin/CTR1PANEL-main---v2
 
 docker-compose build
 docker-compose up -d
